@@ -2,6 +2,7 @@
 Discord Webhook으로 시황 보고서 전송 모듈
 """
 import requests
+import json
 import os
 from datetime import datetime
 
@@ -48,7 +49,7 @@ def _fmt_vol(volume):
     return f"{volume:,}주"
 
 
-def send_report(index_data, stock_data, weekly_data, analysis, report_time):
+def send_report(index_data, stock_data, weekly_data, analysis, report_time, pdf_bytes=None):
     webhook_url = os.environ['DISCORD_WEBHOOK_URL']
 
     date_str = report_time.strftime('%Y년 %m월 %d일')
@@ -158,9 +159,18 @@ def send_report(index_data, stock_data, weekly_data, analysis, report_time):
         "embeds": embeds,
     }
 
-    resp = requests.post(webhook_url, json=payload, timeout=10)
+    if pdf_bytes:
+        # PDF 파일과 함께 전송 (multipart)
+        filename = f"시황보고서_{report_time.strftime('%Y%m%d')}.pdf"
+        files = {
+            'payload_json': (None, json.dumps(payload), 'application/json'),
+            'file': (filename, pdf_bytes, 'application/pdf'),
+        }
+        resp = requests.post(webhook_url, files=files, timeout=30)
+    else:
+        resp = requests.post(webhook_url, json=payload, timeout=10)
 
-    if resp.status_code == 204:
+    if resp.status_code in (200, 204):
         print("  [sender] Discord 전송 성공!")
     else:
         print(f"  [sender] Discord 전송 실패: {resp.status_code} - {resp.text}")

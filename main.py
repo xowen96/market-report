@@ -10,6 +10,7 @@ import pytz
 from fetcher import get_index_data, get_stock_data, get_top_volume_stocks, get_weekly_data, get_news
 from analyzer import generate_analysis
 from sender import send_report
+from pdf_generator import generate_pdf
 
 
 def main():
@@ -54,9 +55,27 @@ def main():
     analysis = generate_analysis(index_data, stock_data, weekly_data, news)
     print(f"  헤드라인: {analysis.get('headline', '-')}")
 
-    # 7. Discord 전송
-    print("\nDiscord 전송 중...")
-    send_report(index_data, stock_data, weekly_data, analysis, now)
+    # 6.5 뉴스 이슈 종목 데이터 추가 수집
+    issue_tickers = analysis.get('issue_tickers', [])
+    if issue_tickers:
+        print(f"  이슈 종목 추가 수집: {issue_tickers}")
+        issue_data = get_stock_data(issue_tickers)
+        for ticker, data in issue_data.items():
+            if ticker not in stock_data:
+                stock_data[ticker] = data
+
+    # 7. PDF 생성
+    print("\nPDF 생성 중...")
+    try:
+        pdf_bytes = generate_pdf(index_data, stock_data, weekly_data, analysis, now)
+        print(f"  PDF 생성 완료 ({len(pdf_bytes):,} bytes)")
+    except Exception as e:
+        print(f"  PDF 생성 실패 (Discord 텍스트만 전송): {e}")
+        pdf_bytes = None
+
+    # 8. Discord 전송
+    print("Discord 전송 중...")
+    send_report(index_data, stock_data, weekly_data, analysis, now, pdf_bytes=pdf_bytes)
 
     print(f"\n{'='*50}")
     print("보고서 발송 완료!")

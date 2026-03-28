@@ -59,11 +59,13 @@ def generate_analysis(index_data, stock_data, weekly_data, news):
     "label": "공포 지배 또는 하락 우세 또는 중립 관망 또는 상승 기대 또는 강세 지속 중 하나만 선택",
     "summary": "전체 시장 분위기 2~3문장 요약."
   }},
-  "key_message": "투자자를 위한 오늘의 핵심 메시지 1문장."
+  "key_message": "투자자를 위한 오늘의 핵심 메시지 1문장.",
+  "issue_tickers": ["TICKER1", "TICKER2"]
 }}
 
 규칙:
 - issues 정확히 4개, outlook 정확히 4개
+- issue_tickers: 오늘 뉴스에서 가장 많이 언급된 미국 주식 티커 1~2개 (예: ["META", "NVDA"]). 없으면 빈 배열 []
 - 실제 뉴스/수치 기반 작성. 뉴스 없으면 지수 움직임 기반으로 합리적 추론
 - 한국어로 작성
 - JSON만 출력, 코드블록(```) 없이"""
@@ -99,4 +101,5 @@ def generate_analysis(index_data, stock_data, weekly_data, news):
         ],
         "sentiment": {"label": "중립 관망", "summary": "분석 생성 중 오류가 발생했습니다."},
         "key_message": "오늘의 시황 분석을 완료하지 못했습니다. 로그를 확인해주세요.",
+        "issue_tickers": [],
     }

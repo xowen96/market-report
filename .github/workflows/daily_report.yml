@@ -2,8 +2,8 @@ name: 미국 증시 시황 보고서
 
 on:
   schedule:
-    # 매주 평일 23:00 UTC = 다음날 08:00 KST (월~금 미국장 마감 후 2시간 뒤)
-    - cron: '0 23 * * 1-5'
+    # 매일 23:30 UTC = 다음날 08:30 KST
+    - cron: '30 23 * * *'
 
   # 수동 테스트 실행 가능 (GitHub Actions 탭 → Run workflow)
   workflow_dispatch:
@@ -22,6 +22,9 @@ jobs:
         with:
           python-version: '3.11'
           cache: 'pip'
+
+      - name: 한국어 폰트 설치
+        run: sudo apt-get install -y fonts-nanum
 
       - name: 의존성 설치
         run: pip install -r requirements.txt
