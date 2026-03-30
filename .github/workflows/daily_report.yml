@@ -32,5 +32,5 @@ jobs:
       - name: 시황 보고서 생성 및 전송
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          DISCORD_WEBHOOK_URL_US: ${{ secrets.DISCORD_WEBHOOK_URL_US }}
         run: python main.py

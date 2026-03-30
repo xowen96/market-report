@@ -50,7 +50,7 @@ def _fmt_vol(volume):
 
 
 def send_report(index_data, stock_data, weekly_data, analysis, report_time, pdf_bytes=None):
-    webhook_url = os.environ['DISCORD_WEBHOOK_URL']
+    webhook_url = os.environ['DISCORD_WEBHOOK_URL_US']
 
     date_str = report_time.strftime('%Y년 %m월 %d일')
     weekday_kr = ['월', '화', '수', '목', '금', '토', '일'][report_time.weekday()]
