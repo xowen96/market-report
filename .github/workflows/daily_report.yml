@@ -2,8 +2,8 @@ name: 미국 증시 시황 보고서
 
 on:
   schedule:
-    # 매일 23:30 UTC = 다음날 08:30 KST
-    - cron: '30 23 * * *'
+    # 매일 23:00 UTC = 매일 08:00 KST (딜레이 감안 → 08:30 도착 목표)
+    - cron: '0 23 * * *'
 
   # 수동 테스트 실행 가능 (GitHub Actions 탭 → Run workflow)
   workflow_dispatch:
